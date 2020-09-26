@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-client = commands.Bot(command_prefix = commands.when_mentioned_or('!'))
+client = commands.Bot(command_prefix = commands.when_mentioned_or('.'))
 client.remove_command('help')
 #Event
 #Displaying if bot ready
@@ -34,14 +34,15 @@ async def help(ctx):
     )
 
     embed.set_author(name='Help')
-    embed.add_field(name='!help', value = 'Bot commands list', inline=False)
-    embed.add_field(name='!ping', value = 'Bot latency!', inline=False)
-    embed.add_field(name='!registration', value = 'Returns registration list', inline=False)
-    embed.add_field(name='!accepted', value = 'Returns accepted list', inline=False)
-    embed.add_field(name='!rejected', value = 'Returns rejected list', inline=False)
-    embed.add_field(name='!detail <id>', value = 'Registration detail!', inline=False)
-    embed.add_field(name='!accept <id>', value = 'Accepting registration', inline=False)
-    embed.add_field(name='!reject <id>', value = 'Rejecting registration', inline=False)
+    embed.add_field(name='.help', value = 'Bot commands list', inline=False)
+    embed.add_field(name='.ping', value = 'Bot latency!', inline=False)
+    embed.add_field(name='.registration', value = 'Returns registration list', inline=False)
+    embed.add_field(name='.accepted', value = 'Returns accepted list', inline=False)
+    embed.add_field(name='.rejected', value = 'Returns rejected list', inline=False)
+    embed.add_field(name='.detail <id>', value = 'Registration detail!', inline=False)
+    embed.add_field(name='.accept <id>', value = 'Accepting registration', inline=False)
+    embed.add_field(name='.reject <id>', value = 'Rejecting registration', inline=False)
+    embed.add_field(name='.invlink <numerator> <satuan waktu>', value = 'Creating invite link just .invilink or seconds = 0 will create permanent invite link', inline=False)
 
     await author.send(embed=embed)
     
@@ -62,24 +63,24 @@ async def rejected_list(ctx):
 
 #Registration detail
 @client.command(aliases=['detail'])
-async def registration_detail(ctx, id = 0):
-    if(id == 0):
+async def registration_detail(ctx, id = "0"):
+    if(id == "0"):
         await ctx.send('mohon isi detail id')
     else:
         await ctx.send('yo wassap mafren')
 
 #Accepted
 @client.command(aliases=['accept'])
-async def accept_registration(ctx, id = 0):
-    if(id == 0):
+async def accept_registration(ctx, id = "0"):
+    if(id == "0"):
         await ctx.send('mohon isi detail id')
     else:
         await ctx.send('aye aye aye aye')
 
 #Rejected
 @client.command(aliases=['reject'])
-async def reject_registration(ctx, id = 0):
-    if(id == 0):
+async def reject_registration(ctx, id = "0"):
+    if(id == "0"):
         await ctx.send('mohon isi detail id')
     else:
         await ctx.send('muda muda muda muda')
@@ -90,4 +91,16 @@ async def bot_say(ctx, *, word):
     author = ctx.message.author
     await ctx.send(f'{author.mention} says {word}')
 
-client.run('TOKEN')
+@client.command(aliases=['invlink'])
+async def create_invite(ctx, numerator = 0 , waktu = "detik"):
+    if(waktu == "detik" and 0 < numerator < 86400):
+        link = await ctx.channel.create_invite(max_age = numerator)
+    elif(waktu == "menit" and 0 < numerator <= 1440):
+        link = await ctx.channel.create_invite(max_age = numerator * 60)
+    elif(waktu == "jam" and 0 < numerator <= 24):
+        link = await ctx.channel.create_invite(max_age = numerator * 3600)
+    elif(waktu == "hari" and 0 < numerator <= 1):
+        link = await ctx.channel.create_invite(max_age = numerator * 86400)
+    await ctx.send(link)
+
+client.run('NzU3NDY5MTM1NzI1NjU4MjEy.X2g2Gw.GI4XxLrYgJay0qmnjmNfswFx0BQ')
