@@ -103,4 +103,4 @@ async def create_invite(ctx, numerator = 0 , waktu = "detik"):
         link = await ctx.channel.create_invite(max_age = numerator * 86400)
     await ctx.send(link)
 
-client.run('NzU3NDY5MTM1NzI1NjU4MjEy.X2g2Gw.GI4XxLrYgJay0qmnjmNfswFx0BQ')
+client.run('TOKEN')
