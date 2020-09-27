@@ -1,5 +1,7 @@
 import discord
 from discord.ext import commands
+import asyncio
+import wrapper_api
 
 client = commands.Bot(command_prefix = commands.when_mentioned_or('.'))
 client.remove_command('help')
@@ -13,6 +15,14 @@ async def on_ready():
 async def on_command_error(ctx,error):
     if isinstance(error,commands.CommandNotFound):
         await ctx.send('Perintah tidak ada')
+@client.event
+async def my_background_task():
+        await client.wait_until_ready()
+        channel = client.get_channel() # channel ID goes here
+        text = f'@everyone {wrapper_api.count_registration()}'
+        while not client.is_closed():
+            await channel.send(text)
+            await asyncio.sleep(3600) # task runs every 60 seconds
 #Commands
 #Bot latency
 @client.command()
@@ -49,7 +59,8 @@ async def help(ctx):
 #Registration list
 @client.command(aliases=['registration'])
 async def registration_list(ctx):
-    await ctx.send('Vanderlinde')
+    text = wrapper_api.get_users() 
+    await ctx.send(text)
 
 #Accepted list
 @client.command(aliases=['accepted'])
@@ -63,23 +74,25 @@ async def rejected_list(ctx):
 
 #Registration detail
 @client.command(aliases=['detail'])
-async def registration_detail(ctx, id = "0"):
-    if(id == "0"):
-        await ctx.send('mohon isi detail id')
+async def registration_detail(ctx, id = '0'):
+    if(id == '0'):
+        await ctx.send('Masukan id dengan benar')
     else:
-        await ctx.send('yo wassap mafren')
+        text = wrapper_api.get_user_detail(id)
+        print(text)
+        await ctx.send(text)
 
 #Accepted
 @client.command(aliases=['accept'])
-async def accept_registration(ctx, id = "0"):
-    if(id == "0"):
+async def accept_registration(ctx, id = '0'):
+    if(id == '0'):
         await ctx.send('mohon isi detail id')
     else:
         await ctx.send('aye aye aye aye')
 
 #Rejected
 @client.command(aliases=['reject'])
-async def reject_registration(ctx, id = "0"):
+async def reject_registration(ctx, id = '0'):
     if(id == "0"):
         await ctx.send('mohon isi detail id')
     else:
@@ -103,4 +116,5 @@ async def create_invite(ctx, numerator = 0 , waktu = "detik"):
         link = await ctx.channel.create_invite(max_age = numerator * 86400)
     await ctx.send(link)
 
+client.loop.create_task(my_background_task())
 client.run('TOKEN')
