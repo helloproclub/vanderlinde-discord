@@ -29,8 +29,9 @@ def get_user_by_nim(nim):
         print('Cannot fetch all tasks: {}'.format(resp.status_code))
     for item in resp_status.json()["data"]["items"]:
         resp_user = url_get(f'/user/{item["user_id"]}')
-        text = f'NIM : {resp_user.json()["data"]["nim"]} \nNama : {resp_user.json()["data"]["name"]} \nEmail : {resp_user.json()["data"]["email"]} \nURL KTM : {resp_user.json()["data"]["ktmurl_get"]} \nURL LETTER : {resp_user.json()["data"]["letterurl_get"]} \nURL LINKEDIN : {resp_user.json()["data"]["linkedinurl_get"]}'
-        return text
+        if (resp_user.json()["data"]["nim"] == nim):
+            text = f'NIM : {resp_user.json()["data"]["nim"]} \nNama : {resp_user.json()["data"]["name"]} \nEmail : {resp_user.json()["data"]["email"]} \nURL KTM : {resp_user.json()["data"]["ktm_url"]} \nURL LETTER : {resp_user.json()["data"]["letter_url"]} \nURL LINKEDIN : {resp_user.json()["data"]["linkedin_url"]}'
+            return text
     return f'Data dengan {nim} Tidak ditemukan'
 
 def accept_user_by_nim(nim,invite_link):
@@ -59,3 +60,4 @@ def decline_user_by_nim(nim,message):
             else:
                 return f'data registrasi dengan {nim} tidak diterima'
     return f'data registrasi dengan {nim} tidak ada'
+
