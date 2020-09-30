@@ -19,7 +19,7 @@ async def on_command_error(ctx,error):
 @client.event
 async def my_background_task():
         await client.wait_until_ready()
-        channel = client.get_channel() # channel ID goes here
+        channel = client.get_channel(756050675464667146) # channel ID goes here
         text = vanderlinde.count_registration_list()
         while not client.is_closed():
             await channel.send(text)
@@ -128,4 +128,4 @@ async def create_invite(ctx, numerator = 0 , waktu = "detik"):
     await ctx.send(link)
 
 client.loop.create_task(my_background_task())
-client.run('')
+client.run('NzU3NDY5MTM1NzI1NjU4MjEy.X2g2Gw.E48dnQKR_BwtQdDOo7r4mMhVaDk')
