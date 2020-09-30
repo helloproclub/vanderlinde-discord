@@ -19,11 +19,11 @@ async def on_command_error(ctx,error):
 @client.event
 async def my_background_task():
         await client.wait_until_ready()
-        channel = client.get_channel(757459792720822323) # channel ID goes here
+        channel = client.get_channel(756050675464667146) # channel ID goes here
         text = vanderlinde.count_registration_list()
         while not client.is_closed():
             await channel.send(text)
-            await asyncio.sleep(30) # task runs every 1 hour
+            await asyncio.sleep(3600) # task runs every 1 hour
 
 #Commands
 #Bot latency
