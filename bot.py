@@ -23,7 +23,7 @@ async def my_background_task():
         text = vanderlinde.count_registration_list()
         while not client.is_closed():
             await channel.send(text)
-            await asyncio.sleep(3600) # task runs every 1 hour
+            await asyncio.sleep(30) # task runs every 1 hour
 
 #Commands
 #Bot latency
