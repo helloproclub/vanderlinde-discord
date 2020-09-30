@@ -55,7 +55,7 @@ def decline_user_by_nim(nim,message):
             data = {"message": f"{message}","secret": "secret"}
             resp = url_post(f'/status/{resp_user.json()["data"]["id"]}/decline',data)
             print('1231321231')
-            if resp.status_code != 201:
+            if resp.status_code != 200:
                 return f'Ada kesalahan teknis'
             else:
                 return f'data registrasi dengan {nim} tidak diterima'
