@@ -82,7 +82,7 @@ async def registration_detail(ctx, nim = '0'):
     if(nim == '0'):
         await ctx.send('Masukan id dengan benar')
     else:
-        text = wrapper_api.get_user_detail(id)
+        text =vanderlinde.get_user_by_nim(nim)
         print(text)
         await ctx.send(text)
 
