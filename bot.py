@@ -2,6 +2,11 @@ import discord
 from discord.ext import commands
 import asyncio
 import vanderlinde
+from dotenv import load_dotenv
+import os
+
+#ENV
+load_dotenv()
 
 client = commands.Bot(command_prefix = commands.when_mentioned_or('.'))
 client.remove_command('help')
@@ -19,7 +24,7 @@ async def on_command_error(ctx,error):
 @client.event
 async def my_background_task():
         await client.wait_until_ready()
-        channel = client.get_channel() # channel ID goes here
+        channel = client.get_channel(756053486872952916) # channel ID goes here
         text = vanderlinde.count_registration_list()
         while not client.is_closed():
             await channel.send(text)
@@ -47,9 +52,9 @@ async def help(ctx):
     embed.add_field(name='.registration', value = 'Returns registration list', inline=False)
     embed.add_field(name='.accepted', value = 'Returns accepted list', inline=False)
     embed.add_field(name='.rejected', value = 'Returns rejected list', inline=False)
-    embed.add_field(name='.detail <id>', value = 'Registration detail!', inline=False)
-    embed.add_field(name='.accept <id>', value = 'Accepting registration', inline=False)
-    embed.add_field(name='.reject <id> <message>', value = 'Rejecting registration', inline=False)
+    embed.add_field(name='.detail <nim>', value = 'Registration detail!', inline=False)
+    embed.add_field(name='.accept <nim>', value = 'Accepting registration', inline=False)
+    embed.add_field(name='.reject <nim> <message>', value = 'Rejecting registration', inline=False)
     embed.add_field(name='.invlink <numerator> <satuan waktu>', value = 'Creating invite link just .invilink or seconds = 0 will create permanent invite link', inline=False)
 
     await author.send(embed=embed)
@@ -82,8 +87,7 @@ async def registration_detail(ctx, nim = '0'):
     if(nim == '0'):
         await ctx.send('Masukan id dengan benar')
     else:
-        text =vanderlinde.get_user_by_nim(nim)
-        print(text)
+        text = vanderlinde.get_user_by_nim(nim)
         await ctx.send(text)
 
 #Accepted
@@ -93,7 +97,6 @@ async def accept_registration(ctx, nim = '0'):
     if(nim == '0'):
         await ctx.send('mohon isi detail nim')
     else:
-        print('oke')
         link = await ctx.channel.create_invite(max_uses = 1)
         await ctx.send(vanderlinde.accept_user_by_nim(nim,link))
 
@@ -104,7 +107,6 @@ async def reject_registration(ctx, nim = '0', *,message = ''):
     if(nim == "0" or message != ''):
         await ctx.send('mohon isi detail nim atau pesan')
     else:
-        print('oke')
         await ctx.send(vanderlinde.decline_user_by_nim(nim,message))
 
 #Say
@@ -128,4 +130,4 @@ async def create_invite(ctx, numerator = 0 , waktu = "detik"):
     await ctx.send(link)
 
 client.loop.create_task(my_background_task())
-client.run('')
+client.run(os.getenv("BOT_TOKEN"))

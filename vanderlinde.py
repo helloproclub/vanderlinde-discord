@@ -1,12 +1,17 @@
 import requests
+from dotenv import load_dotenv
+import os
+
+#ENV
+load_dotenv()
 
 def url_get(path):
-    headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxZjRiNTFhLTQxNTctNDQwMi1iM2E2LWYyMDU1YzliYzllOSJ9.rxir6oY-vzfS_yvz9RSoJr2pwXqe2FEMT6Hpdzvy0-U'}
+    headers = {'Authorization': os.getenv("AUTH")}
     url = 'https://aqueous-reaches-39441.herokuapp.com' + path
     return requests.get(url, headers = headers)
 
 def url_post(path,data):
-    headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxZjRiNTFhLTQxNTctNDQwMi1iM2E2LWYyMDU1YzliYzllOSJ9.rxir6oY-vzfS_yvz9RSoJr2pwXqe2FEMT6Hpdzvy0-U'}
+    headers = {'Authorization': os.getenv("AUTH")}
     url = 'https://aqueous-reaches-39441.herokuapp.com' + path
     return requests.post(url, headers = headers, json=data)
 
@@ -54,10 +59,8 @@ def decline_user_by_nim(nim,message):
         if(resp_user.json()["data"]["nim"] == nim):
             data = {"message": f"{message}","secret": "secret"}
             resp = url_post(f'/status/{resp_user.json()["data"]["id"]}/decline',data)
-            print('1231321231')
             if resp.status_code != 200:
                 return f'Ada kesalahan teknis'
             else:
                 return f'data registrasi dengan {nim} tidak diterima'
     return f'data registrasi dengan {nim} tidak ada'
-
