@@ -7,11 +7,12 @@ load_dotenv()
 
 def url_get(path):
     url = 'https://aqueous-reaches-39441.herokuapp.com' + path
-    return requests.get(url, headers = headers)
+    return requests.get(url)
 
 def url_post(path,data):
+    headers = {'Authorization': os.getenv("AUTH")}
     url = 'https://aqueous-reaches-39441.herokuapp.com' + path
-    return requests.post(url, headers = headers, json=data)
+    return requests.post(url, json=data)
 
 def count_registration_list():
     resp = url_get('/status?status=0')
@@ -42,7 +43,7 @@ def accept_user_by_nim(nim,invite_link):
     for item in resp_status.json()["data"]["items"]:
         resp_user = url_get(f'/user/{item["user_id"]}')
         if(resp_user.json()["data"]["nim"] == nim):
-            data = {"discord_invite": f"{invite_link}",os.getenv("AUTH")}
+            data = {"discord_invite": f"{invite_link}","secret": os.getenv("AUTH")}
             resp = url_post(f'/status/{resp_user.json()["data"]["id"]}/accept',data)
             if resp.status_code != 200:
                 return f'Kesalahan teknis'
