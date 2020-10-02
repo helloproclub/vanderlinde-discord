@@ -104,7 +104,7 @@ async def accept_registration(ctx, nim = '0'):
 @client.command(aliases=['reject'])
 @commands.has_permissions(administrator=True)
 async def reject_registration(ctx, nim = '0', *,message = ''):
-    if(nim == "0" or message != ''):
+    if(nim == "0" or message == ''):
         await ctx.send('mohon isi detail nim atau pesan')
     else:
         await ctx.send(vanderlinde.decline_user_by_nim(nim,message))
