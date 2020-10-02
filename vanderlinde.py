@@ -6,12 +6,10 @@ import os
 load_dotenv()
 
 def url_get(path):
-    headers = {'Authorization': os.getenv("AUTH")}
     url = 'https://aqueous-reaches-39441.herokuapp.com' + path
     return requests.get(url, headers = headers)
 
 def url_post(path,data):
-    headers = {'Authorization': os.getenv("AUTH")}
     url = 'https://aqueous-reaches-39441.herokuapp.com' + path
     return requests.post(url, headers = headers, json=data)
 
@@ -44,7 +42,7 @@ def accept_user_by_nim(nim,invite_link):
     for item in resp_status.json()["data"]["items"]:
         resp_user = url_get(f'/user/{item["user_id"]}')
         if(resp_user.json()["data"]["nim"] == nim):
-            data = {"discord_invite": f"{invite_link}","secret": "secret"}
+            data = {"discord_invite": f"{invite_link}",os.getenv("AUTH")}
             resp = url_post(f'/status/{resp_user.json()["data"]["id"]}/accept',data)
             if resp.status_code != 200:
                 return f'Kesalahan teknis'
@@ -57,7 +55,7 @@ def decline_user_by_nim(nim,message):
     for item in resp_status.json()["data"]["items"]:
         resp_user = url_get(f'/user/{item["user_id"]}')
         if(resp_user.json()["data"]["nim"] == nim):
-            data = {"message": f"{message}","secret": "secret"}
+            data = {"message": f"{message}","secret": os.getenv("AUTH")}
             resp = url_post(f'/status/{resp_user.json()["data"]["id"]}/decline',data)
             if resp.status_code != 200:
                 return f'Ada kesalahan teknis'
