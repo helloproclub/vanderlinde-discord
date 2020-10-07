@@ -6,7 +6,7 @@ import os
 load_dotenv()
 
 def url_get(path):
-    url = 'https://aqueous-reaches-39441.herokuapp.com' + path
+    url = os.getenv("URL") + path
     return requests.get(url)
 
 def url_post(path,data):
@@ -16,7 +16,8 @@ def url_post(path,data):
 
 def count_registration_list():
     resp = url_get('/status?status=0')
-    text = f'Ada {resp.json()["data"]["count"]} data registrasi yang belum direview'
+    counter = resp.json()["data"]["count"]
+    text = f'Ada {counter} data registrasi yang belum direview'
     return text
 
 def get_user_by_status(status):
@@ -24,7 +25,13 @@ def get_user_by_status(status):
     text = ''
     for item in resp_status.json()["data"]["items"]:
         resp_user = url_get(f'/user/{item["user_id"]}')
-        text += f'{resp_user.json()["data"]["nim"]} | {resp_user.json()["data"]["name"]}\n'
+        if(resp_user.json()["data"]["division"] == 0):
+            divisi = 'SE'
+        elif(resp_user.json()["data"]["division"] == 1):
+            divisi = 'PD'
+        elif(resp_user.json()["data"]["division"] == 2):
+            divisi = 'BA'
+        text += f'{resp_user.json()["data"]["nim"]} | {resp_user.json()["data"]["name"]} | {divisi}\n'
     return text
 
 def get_user_by_nim(nim):
@@ -34,7 +41,13 @@ def get_user_by_nim(nim):
     for item in resp_status.json()["data"]["items"]:
         resp_user = url_get(f'/user/{item["user_id"]}')
         if (resp_user.json()["data"]["nim"] == nim):
-            text = f'NIM : {resp_user.json()["data"]["nim"]} \nNama : {resp_user.json()["data"]["name"]} \nEmail : {resp_user.json()["data"]["email"]} \nURL KTM : {resp_user.json()["data"]["ktm_url"]} \nURL LETTER : {resp_user.json()["data"]["letter_url"]} \nURL LINKEDIN : {resp_user.json()["data"]["linkedin_url"]}'
+            if(resp_user.json()["data"]["division"] == 0):
+                divisi = 'SE'
+            elif(resp_user.json()["data"]["division"] == 1):
+                divisi = 'PD'
+            elif(resp_user.json()["data"]["division"] == 2):
+                divisi = 'BA'
+            text = f'NIM : {resp_user.json()["data"]["nim"]} \nNama : {resp_user.json()["data"]["name"]}\nDivisi : {divisi} \nEmail : {resp_user.json()["data"]["email"]} \nURL KTM : {resp_user.json()["data"]["ktm_url"]} \nURL LETTER : {resp_user.json()["data"]["letter_url"]} \nURL CV : {resp_user.json()["data"]["cv_url"]} \nURL LINKEDIN : {resp_user.json()["data"]["linkedin_url"]}'
             return text
     return f'Data dengan {nim} Tidak ditemukan'
 

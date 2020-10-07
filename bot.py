@@ -25,8 +25,8 @@ async def on_command_error(ctx,error):
 async def my_background_task():
         await client.wait_until_ready()
         channel = client.get_channel(756053486872952916) # channel ID goes here
-        text = vanderlinde.count_registration_list()
         while not client.is_closed():
+            text = vanderlinde.count_registration_list()
             await channel.send(text)
             await asyncio.sleep(3600) # task runs every 1 hour
 
